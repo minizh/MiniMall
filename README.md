@@ -1,4 +1,4 @@
-# MiniMall
+# MiniMall-branch_01
 
 >A simple Shopping Center Project . (based on vue+mongodb+nodejs)
 
