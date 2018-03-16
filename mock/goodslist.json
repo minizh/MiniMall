@@ -1,0 +1,41 @@
+{
+  "status": "0",
+  "msg": "",
+  "result": [{
+      "productId": "001",
+      "productName": "小米8",
+      "productPrice": "4566",
+      "productImg": "1.jpg"
+    },
+    {
+      "productId": "002",
+      "productName": "华为",
+      "productPrice": "3566",
+      "productImg": "2.jpg"
+    },
+    {
+      "productId": "003",
+      "productName": "苹果X",
+      "productPrice": "9566",
+      "productImg": "3.jpg"
+    },
+    {
+      "productId": "004",
+      "productName": "ViVo",
+      "productPrice": "3922",
+      "productImg": "4.jpg"
+    },
+    {
+      "productId": "005",
+      "productName": "红米plus",
+      "productPrice": "1566",
+      "productImg": "5.jpg"
+    },
+    {
+      "productId": "006",
+      "productName": "vivox20",
+      "productPrice": "6566",
+      "productImg": "6.jpg"
+    }
+  ]
+}
