@@ -9,7 +9,8 @@
                 <div class="filter-nav">
                     <span class="sortby">Sort by:</span>
                     <a href="javascript:void(0)" class="default cur">Default</a>
-                    <a href="javascript:void(0)" class="price">Price
+                    <a v-on:click="sortGoods" href="javascript:void(0)" class="price">
+                        Price
                         <svg class="icon icon-arrow-short">
                             <use xlink:href="#icon-arrow-short"></use>
                         </svg>
@@ -39,7 +40,7 @@
                                     </div>
                                     <div class="main">
                                         <div class="name">{{item.productName}}</div>
-                                        <div class="price">￥{{item.productPrice}}.00</div>
+                                        <div class="price">￥{{item.salePrice}}.00</div>
                                         <div class="btn-area">
                                             <a href="javascript:;" class="btn btn--m">加入购物车</a>
                                         </div>
@@ -60,6 +61,7 @@
 import "../assets/css/base.css";
 import "../assets/css/product.css";
 import "../assets/css/login.css";
+import "../assets/svg.svg";
 import NavHeader from "@/components/Header";
 import NavFooter from "@/components/Footer";
 import Bread from "@/components/Bread";
@@ -67,28 +69,39 @@ import axios from "axios";
 export default {
   data() {
     return {
-      goodslist: [],
-      priceFilter: [
+      goodslist: [],//商品列表对象数组
+      priceFilter: [//价格过滤器渲染
         {
-          startPrice: "0.00",
-          endPrice: "100.00"
+          startPrice: "0",
+          endPrice: "100"
         },
         {
-          startPrice: "100.00",
-          endPrice: "500.00"
+          startPrice: "100",
+          endPrice: "500"
         },
         {
-          startPrice: "500.00",
-          endPrice: "1000.00"
+          startPrice: "500",
+          endPrice: "1000"
         },
         {
-          startPrice: "1000.00",
-          endPrice: "2000.00"
+          startPrice: "1000",
+          endPrice: "2000"
+        },
+        {
+          startPrice: "2000",
+          endPrice: "3000"
+        },
+        {
+          startPrice: "3000",
+          endPrice: "4000"
         }
       ],
-      priceChecked: "all",
-      isShowFilter: false,
-      isShowOverlay: false
+      priceChecked: "all",//默认价格过滤器all为选择
+      isShowFilter: false,//移动选控制价格过滤的显示与隐藏
+      isShowOverlay: false,//移动选控制遮罩层的显示与隐藏
+      sortFlag:true,//商品列表按照数据库默认排序
+      pageNo:1,//分页起始页
+      pageSize:20,//每页数量
     };
   },
   components: {
@@ -97,15 +110,25 @@ export default {
     Bread
   },
   mounted() {
+    // vue实例过载后请求商品列表数据
     this.getGoodsList();
   },
   methods: {
+    // 请求商品列表数据
     getGoodsList() {
-      axios.get("/goods").then(res => {
+        var data={
+            pageNo:this.pageNo,
+            pageSize:this.pageSize,
+            sort:this.sortFlag ? 1 : -1 // 默认升序，否则降序
+        };
+      axios.get("/goods",{
+          params:data
+      }).then(res => {
         var r = res.data;
         this.goodslist = r.result.list;
       });
     },
+    // 移动选显示/隐藏价格过滤器
     showFilter() {
       this.isShowFilter = true;
       this.isShowOverlay = true;
@@ -114,9 +137,16 @@ export default {
       this.isShowFilter = false;
       this.isShowOverlay = false;
     },
+    // 价格过滤器切换过滤条件，更新选中样式
     choosePrice(i) {
       this.priceChecked = i;
       this.hideFilter();
+    },
+    // 列表页排序功能 默认/价格
+    sortGoods(){
+        this.sortFlag=!this.sortFlag;//排序状态取反
+        this.pageNo=1;//重置页码
+        this.getGoodsList();//重新请求数据
     }
   }
 };
