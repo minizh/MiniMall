@@ -9,16 +9,18 @@ Vue.config.productionTip = false
 
 //配置图片懒加载
 Vue.use(vueLazyload, {
-    // preLoad: 1.3,
-    // error: 'dist/error.png',
-    loading: 'static/loading-svg/loading-cubes.svg',
-    // attempt: 1
-  })
+  // preLoad: 1.3,
+  // error: 'dist/error.png',
+  loading: 'static/loading-svg/loading-bars.svg',
+  // attempt: 1
+})
 
 /* eslint-disable no-new */
 new Vue({
-    el: '#app',
-    router,
-    components: { App },
-    template: '<App/>'
+  el: '#app',
+  router,
+  components: {
+    App
+  },
+  template: '<App/>'
 })

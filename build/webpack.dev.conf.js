@@ -10,15 +10,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
-//node服务器配置
-// nodejs开发框架express，用来简化操作
-const express = require('express')
-// 创建node.js的express开发框架的实例
-const app = express()
-//引用路由
-var router = express.Router()
-// 引用的json地址
-var appData = require('../mock/goodslist.json')
+// //node服务器配置
+// // nodejs开发框架express，用来简化操作
+// const express = require('express')
+// // 创建node.js的express开发框架的实例
+// const app = express()
+// //引用路由
+// var router = express.Router()
+// // 引用的json地址
+// var appData = require('../mock/goodslist.json')
 
 // router.get('/goods', (req, res, next) => {
 //   // json某一个key
@@ -26,7 +26,7 @@ var appData = require('../mock/goodslist.json')
 //   res.json(appData);
 // });
 //使用路由
-app.use(router);
+// app.use(router);
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -67,14 +67,14 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     watchOptions: {
       poll: config.dev.poll,
     },
-    before(app) {
-      app.get('/goods', (req, res) => {
-        // console.log(res);
-        // json某一个key
-        var goodlist = appData.result;
-        res.json(appData);
-      })
-    }
+    // before(app) {
+    //   app.get('/goods', (req, res) => {
+    //     // console.log(res);
+    //     // json某一个key
+    //     var goodlist = appData.result;
+    //     res.json(appData);
+    //   })
+    // }
   },
   plugins: [
     new webpack.DefinePlugin({
