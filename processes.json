@@ -1,0 +1,35 @@
+{
+  "apps": [{
+      "name": "dev",
+      "script": "build/webpack.dev.conf.js",
+      "cwd": "./",
+      "watch": [
+        "bin",
+        "src",
+        "config",
+        "public",
+        "routes",
+        "views"
+      ],
+      "error_file": "./logs/app-err.log",
+      "out_file": "./logs/app-out.log",
+      "log_date_format": "YYYY-MM-DD HH:mm Z"
+    },
+    {
+      "name": "www",
+      "script": "service/bin/www",
+      "cwd": "./",
+      "watch": [
+        "bin",
+        "src",
+        "config",
+        "public",
+        "routes",
+        "views"
+      ],
+      "error_file": "./logs/app-err.log",
+      "out_file": "./logs/app-out.log",
+      "log_date_format": "YYYY-MM-DD HH:mm Z"
+    }
+  ]
+}
