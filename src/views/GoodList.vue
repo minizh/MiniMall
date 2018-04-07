@@ -61,7 +61,6 @@
 import "../assets/css/base.css";
 import "../assets/css/product.css";
 import "../assets/css/login.css";
-import "../assets/svg.svg";
 import NavHeader from "@/components/Header";
 import NavFooter from "@/components/Footer";
 import Bread from "@/components/Bread";
