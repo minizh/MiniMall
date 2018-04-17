@@ -22,27 +22,65 @@ router.get('/', function (req, res, next) {
   let page = parseInt(req.param("pageNo"));
   let pageSize = parseInt(req.param("pageSize"));
   let sort = req.param("sort");
-  // let priceLevel = req.param("priceLevel");
-  let skip = (page-1)*pageSize;
+  let priceLevel = req.param("priceLevel");
+  let priceGt = '',
+    priceLte = '';
+  let skip = (page - 1) * pageSize;
   let params = {};
-  let goodsModel = Goods.find(params).skip(skip).limit(pageSize);
-  goodsModel.sort({'salePrice':sort});
-  goodsModel.exec(function (err,doc) {
-      if(err){
-          res.json({
-            status:'1',
-            msg:err.message
-          });
-      }else{
-          res.json({
-              status:'0',
-              msg:'',
-              result:{
-                  count:doc.length,
-                  list:doc
-              }
-          });
+  if (priceLevel != 'all') {
+    switch (priceLevel) {
+      case '0':
+        priceGt = 0;
+        priceLte = 100;
+        break;
+      case '1':
+        priceGt = 100;
+        priceLte = 500;
+        break;
+      case '2':
+        priceGt = 500;
+        priceLte = 1000;
+        break;
+      case '3':
+        priceGt = 1000;
+        priceLte = 2000;
+        break;
+      case '4':
+        priceGt = 2000;
+        priceLte = 3000;
+        break;
+      case '5':
+        priceGt = 3000;
+        priceLte = 4000;
+        break;
+    }
+    params = {
+      salePrice: {
+        $gt: priceGt,
+        $lte: priceLte
       }
+    }
+  }
+  let goodsModel = Goods.find(params).skip(skip).limit(pageSize);
+  goodsModel.sort({
+    'salePrice': sort
+  });
+  goodsModel.exec(function (err, doc) {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message
+      });
+    } else {
+      res.json({
+        status: '0',
+        msg: '',
+        result: {
+          count: doc.length,
+          list: doc
+        }
+      });
+    }
   })
 });
 

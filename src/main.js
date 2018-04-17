@@ -4,16 +4,21 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import vueLazyload from 'vue-lazyload'
+import infiniteScroll from 'vue-infinite-scroll'
+// import Icon from './assets/svg/svg.svg'
+
+// Vue.component('icon', Icon);
 
 Vue.config.productionTip = false
 
 //配置图片懒加载
 Vue.use(vueLazyload, {
-  // preLoad: 1.3,
-  // error: 'dist/error.png',
   loading: 'static/loading-svg/loading-bars.svg',
   // attempt: 1
 })
+
+// 配置下拉加载更多
+Vue.use(infiniteScroll)
 
 /* eslint-disable no-new */
 new Vue({
