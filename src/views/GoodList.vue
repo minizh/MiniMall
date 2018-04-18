@@ -42,7 +42,7 @@
                     <div class="name">{{item.productName}}</div>
                     <div class="price">￥{{item.salePrice}}.00</div>
                     <div class="btn-area">
-                      <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                      <a href="javascript:;" class="btn btn--m" v-on:click="addCart(item.productId)">加入购物车</a>
                     </div>
                   </div>
                 </li>
@@ -129,34 +129,30 @@ export default {
         priceLevel: this.priceLevel
       };
       this.hasMore = true;
-      axios
-        .get("/goods", {
-          params: data
-        })
-        .then(res => {
-          this.hasMore = false;
-          var r = res.data;
-          // 加载成功
-          if (r.status == "0") {
-            // flag=true,分页查询，flag=false 只加载第一页
-            if (flag) {
-              this.goodsList = this.goodsList.concat(r.result.list);
-              // 如果没数据了，禁用加载，隐藏加载更多
-              if (r.result.count == 0) {
-                this.busy = true;
-                // this.hasMore = false;
-              } else {
-                this.busy = false;
-              }
+      axios.get("/goods/list", { params: data }).then(res => {
+        this.hasMore = false;
+        var r = res.data;
+        // 加载成功
+        if (r.status == "0") {
+          // flag=true,分页查询，flag=false 只加载第一页
+          if (flag) {
+            this.goodsList = this.goodsList.concat(r.result.list);
+            // 如果没数据了，禁用加载，隐藏加载更多
+            if (r.result.count == 0) {
+              this.busy = true;
+              // this.hasMore = false;
             } else {
-              this.goodsList = r.result.list;
               this.busy = false;
             }
           } else {
-            // 加载失败
-            this.goodsList = [];
+            this.goodsList = r.result.list;
+            this.busy = false;
           }
-        });
+        } else {
+          // 加载失败
+          this.goodsList = [];
+        }
+      });
     },
     // 移动选显示/隐藏价格过滤器
     showFilter() {
@@ -188,10 +184,17 @@ export default {
         this.pageNo++;
         this.getGoodsList(true);
       }, 500);
+    },
+    addCart(productId) {
+      axios.post("/goods/addCart", { productId: productId }).then(res => {
+        if (res.status === "0") {
+          alert(res.data.msg);
+        } else {
+          alert(res.data.msg);
+        }
+      });
     }
   }
 };
 </script>
 
-<style scoped lang="stylus">
-</style>

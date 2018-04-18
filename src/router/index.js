@@ -5,9 +5,15 @@ import GoodList from '@/views/GoodList'
 Vue.use(Router)
 
 export default new Router({
-    routes: [{
-        path: '/',
-        name: 'GoodList',
-        component: GoodList
-    }]
+  routes: [{
+      path: '/',
+      name: 'GoodList',
+      component: GoodList
+    },
+    {
+      path: '/list',
+      name: 'GoodList',
+      component: GoodList
+    }
+  ]
 })
