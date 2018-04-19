@@ -22,6 +22,25 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// 全局登陆拦截
+app.use((req, res, next) => {
+  if (req.cookies.userId) {
+    next()
+  } else {
+    if (req.originalUrl === '/users/login' || req.originalUrl === '/users/logout' || req.path === '/goods/list') {
+      next()
+    } else {
+      res.json({
+        status: '1001',
+        msg: '当前未登录',
+        result: ''
+      });
+    }
+  }
+});
+
+//配置一级路由
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/goods', goods);

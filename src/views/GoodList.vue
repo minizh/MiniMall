@@ -11,7 +11,7 @@
           <a href="javascript:void(0)" class="default cur">Default</a>
           <a v-on:click="sortGoods" href="javascript:void(0)" class="price">
             Price
-            <svg class="icon icon-arrow-short">
+            <svg class="icon icon-arrow-short" v-bind:class="{'sort-up':sortFlag}">
               <use xlink:href="#icon-arrow-short"></use>
             </svg>
           </a>
@@ -56,6 +56,12 @@
       </div>
     </div>
     <div class="md-overlay" v-show="isShowOverlay" v-on:click="hideFilter"></div>
+    <modal v-bind:mdShow='mdShow'>
+      <p name="message">请先登录，否则无法加入到购物车中！</p>
+      <div name="btnGroup">
+        <a class="btn btn--m">关闭</a>
+      </div>
+    </modal>
     <nav-footer></nav-footer>
   </div>
 </template>
@@ -67,6 +73,7 @@ import "../assets/css/login.css";
 import NavHeader from "@/components/Header";
 import NavFooter from "@/components/Footer";
 import Bread from "@/components/Bread";
+import Modal from "@/components/Modal";
 import axios from "axios";
 export default {
   data() {
@@ -107,13 +114,15 @@ export default {
       pageSize: 8, //每页数量
       busy: false, //控制下拉加载是否有效，默认false为有效
       hasMore: false, //控制加载更多的显示与隐藏
-      priceLevel: "all" //价格过滤条件，默认为all，对应下标为0
+      priceLevel: "all", //价格过滤条件，默认为all，对应下标为0
+      mdShow: false //传递到子组件Modal，控制模态框的显示与隐藏
     };
   },
   components: {
     NavHeader,
     NavFooter,
-    Bread
+    Bread,
+    Modal
   },
   mounted() {
     // vue实例过载后请求商品列表数据
@@ -178,6 +187,7 @@ export default {
       this.pageNo = 1; //重置页码
       this.getGoodsList(false); //重新请求数据
     },
+    // 分页下拉加载
     loadMore() {
       this.busy = true;
       setTimeout(() => {
@@ -185,12 +195,14 @@ export default {
         this.getGoodsList(true);
       }, 500);
     },
+    // 添加到购物车
     addCart(productId) {
       axios.post("/goods/addCart", { productId: productId }).then(res => {
         if (res.status === "0") {
           alert(res.data.msg);
         } else {
-          alert(res.data.msg);
+          this.mdShow = true; //显示模态框
+          // alert(res.data.msg);
         }
       });
     }
