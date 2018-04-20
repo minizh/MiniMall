@@ -78,6 +78,7 @@
 
 <script>
 import "../assets/css/login.css";
+// import Modal from "./Modal";
 import axios from "axios";
 export default {
   data() {
@@ -122,7 +123,7 @@ export default {
         let r = res.data;
         if (r.status === "0") {
           this.nickName = "";
-          alert(r.msg);
+          //   alert(r.msg);
         }
       });
     },

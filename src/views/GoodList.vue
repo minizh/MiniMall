@@ -56,10 +56,24 @@
       </div>
     </div>
     <div class="md-overlay" v-show="isShowOverlay" v-on:click="hideFilter"></div>
-    <modal v-bind:mdShow='mdShow'>
-      <p name="message">请先登录，否则无法加入到购物车中！</p>
-      <div name="btnGroup">
-        <a class="btn btn--m">关闭</a>
+    <!-- 登录拦截 -->
+    <modal v-bind:mdShow='mdShow' v-on:close="closeModal">
+      <p slot="message">请先登录，否则无法加入到购物车中！</p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" @click="mdShow=false">关闭</a>
+      </div>
+    </modal>
+    <!-- 加入购物车成功 -->
+    <modal v-bind:mdShow='mdShowCart' v-on:close="closeModal">
+      <p slot="message">
+        <svg class="icon icon-status-ok">
+          <use xlink:href="#icon-status-ok" xmlns:xlink="http://www.w3.org/1999/xlink"></use>
+        </svg>
+        加入购物车中成功！
+      </p>
+      <div slot="btnGroup">
+        <a class="btn btn--m" href="javascript:;" @click="mdShowCart=false">继续购物</a>
+        <router-link class="btn btn--m" href='javascript:;' to="/cart">去购物车</router-link>
       </div>
     </modal>
     <nav-footer></nav-footer>
@@ -115,7 +129,8 @@ export default {
       busy: false, //控制下拉加载是否有效，默认false为有效
       hasMore: false, //控制加载更多的显示与隐藏
       priceLevel: "all", //价格过滤条件，默认为all，对应下标为0
-      mdShow: false //传递到子组件Modal，控制模态框的显示与隐藏
+      mdShow: false, //传递到子组件Modal，控制模态框的显示与隐藏，用户未登录
+      mdShowCart: false //添加到购物车成功提交模态框
     };
   },
   components: {
@@ -198,13 +213,20 @@ export default {
     // 添加到购物车
     addCart(productId) {
       axios.post("/goods/addCart", { productId: productId }).then(res => {
-        if (res.status === "0") {
-          alert(res.data.msg);
+        // alert(JSON.stringify(res));
+        let r = res.data;
+        if (r.status === "0") {
+          this.mdShowCart = true; //添加成功
         } else {
-          this.mdShow = true; //显示模态框
+          this.mdShow = true; //显示未登录模态框
           // alert(res.data.msg);
         }
       });
+    },
+    //关闭模态框
+    closeModal() {
+      this.mdShow = false;
+      this.mdShowCart = false;
     }
   }
 };

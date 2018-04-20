@@ -4,7 +4,7 @@
         <div class="md-modal modal-msg md-modal-transition" v-bind:class="{'md-show':mdShow}">
             <div class="md-modal-inner">
                 <div class="md-top">
-                    <button class="md-close" @click="mdShow=false">Close</button>
+                    <button class="md-close" @click="closeModal">Close</button>
                 </div>
                 <div class="md-content">
                     <div class="confirm-tips">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <!-- 遮罩层 -->
-        <div class="md-overlay" v-if="mdShow" @click="mdShow=false"></div>
+        <div class="md-overlay" v-if="mdShow" @click="closeModal"></div>
     </div>
 </template>
 
@@ -30,6 +30,11 @@ export default {
     return {
       msg: ""
     };
+  },
+  methods: {
+    closeModal() {
+      this.$emit("close");
+    }
   }
 };
 </script>
