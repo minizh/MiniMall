@@ -36,7 +36,7 @@
               <ul>
                 <li v-for="item in goodsList">
                   <div class="pic">
-                    <a href="javascript:;"><img v-lazy="'static/'+item.productImage" alt=""></a>
+                    <a href="javascript:;"><img v-lazy="'static/'+item.productImage" v-bind:alt="item.productName"></a>
                   </div>
                   <div class="main">
                     <div class="name">{{item.productName}}</div>
@@ -81,9 +81,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import "../assets/css/base.css";
+// import "../assets/css/base.css";
 import "../assets/css/product.css";
-import "../assets/css/login.css";
 import NavHeader from "@/components/Header";
 import NavFooter from "@/components/Footer";
 import Bread from "@/components/Bread";

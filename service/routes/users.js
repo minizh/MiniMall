@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var User = require('../models/user');
+let express = require('express');
+let router = express.Router();
+let User = require('../models/user');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -9,7 +9,7 @@ router.get('/', function (req, res, next) {
 
 // 登录
 router.post('/login', (req, res, next) => {
-  var param = {
+  let param = {
     userName: req.body.userName,
     userPwd: req.body.userPwd
   }
@@ -75,6 +75,55 @@ router.post('/checkLogin', (req, res, next) => {
       result: ''
     });
   }
+});
+
+// 购物车列表信息
+router.get('/cartList', (req, res, next) => {
+  let userId = req.cookies.userId;
+  User.findOne({ userId: userId }, (err, data) => {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    } else {
+      res.json({
+        status: '0',
+        msg: '',
+        result: data.cartList
+      });
+    }
+  });
+});
+
+// 删除一条购物车商品数据
+router.post('/cart/del', (req, res, next) => {
+  let userId = req.cookies.userId;
+  let productId = req.body.productId;
+  User.update({
+    userId: userId
+  }, {
+      $pull: {
+        'cartList': {
+          'productId': productId
+        }
+      }
+    }, (err, data) => {
+      if(err){
+        res.json({
+          status:'1',
+          msg:err.msg,
+          result:''
+        });
+      }else{
+        res.json({
+          status:'0',
+          msg:'删除成功！',
+          result:data
+        });
+      }
+    });
 });
 
 module.exports = router;

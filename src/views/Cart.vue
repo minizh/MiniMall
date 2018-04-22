@@ -2,7 +2,7 @@
   <div>
     <nav-header></nav-header>
     <bread>
-      <a href="/list">Goods</a>
+      <a href="/#/list">Goods</a>
       <span>My Cart</span>
     </bread>
     <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -52,7 +52,7 @@
               </ul>
             </div>
             <ul class="cart-item-list">
-              <li v-for="">
+              <li v-for="item in cartList">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
                     <a href="javascipt:;" class="checkbox-btn item-check-btn">
@@ -62,33 +62,33 @@
                     </a>
                   </div>
                   <div class="cart-item-pic">
-                    <img src="/static/1.jpg">
+                    <img v-bind:src="'static/'+item.productImage" v-bind:alt="item.productName">
                   </div>
                   <div class="cart-item-title">
-                    <div class="item-name">XX</div>
+                    <div class="item-name" v-text="item.productName"></div>
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price">1000</div>
+                  <div class="item-price" v-text="item.salePrice"></div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
                         <a class="input-sub">-</a>
-                        <span class="select-ipt">10</span>
+                        <span class="select-ipt" v-text="item.productNum"></span>
                         <a class="input-add">+</a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total">100</div>
+                  <div class="item-price-total" v-text="item.productNum*item.salePrice"></div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
                     <a href="javascript:;" class="item-edit-btn">
-                      <svg class="icon icon-del">
+                      <svg class="icon icon-del" @click="delCartConfirm(item.productId)">
                         <use xlink:href="#icon-del"></use>
                       </svg>
                     </a>
@@ -125,15 +125,19 @@
         </div>
       </div>
     </div>
+    <modal v-bind:mdShow="modalConfirm" v-on:close="closeModal">
+      <p slot="message">您确认要删除此商品吗？</p>
+      <div slot="btnGroup">
+        <a href="javascript:;" class="btn btn--m" @click="delCart">确认</a>
+        <a href="javascript:;" class="btn btn--m" @click="modalConfirm=false">取消</a>
+      </div>
+    </modal>
     <nav-footer></nav-footer>
   </div>
 </template>
 <script>
-import "../assets/css/base.css";
 import "../assets/css/checkout.css";
-import "../assets/css/product.css";
 import "../assets/css/cart.css";
-import "../assets/css/login.css";
 import NavHeader from "./../components/Header";
 import NavFooter from "./../components/Footer";
 import Bread from "./../components/Bread";
@@ -141,7 +145,11 @@ import Modal from "./../components/Modal";
 import axios from "axios";
 export default {
   data() {
-    return {};
+    return {
+      cartList: [],
+      modalConfirm: false,
+      productId: ""
+    };
   },
   components: {
     NavHeader,
@@ -149,6 +157,36 @@ export default {
     Bread,
     Modal
   },
-  methods: {}
+  mounted() {
+    this.init();
+  },
+  methods: {
+    // 初始化获取购物车列表信息
+    init() {
+      axios.get("/users/cartList").then(res => {
+        let r = res.data;
+        this.cartList = r.result;
+      });
+    },
+    // 关闭删除确认模态框
+    closeModal() {
+      this.modalConfirm = false;
+    },
+    // 点击删除按钮显示确认模态框
+    delCartConfirm(productId) {
+      this.modalConfirm = true;
+      this.productId = productId;
+    },
+    // 点击确认删除商品数据
+    delCart(productId) {
+      axios.post("/users/cart/del", { productId: this.productId }).then(res => {
+        let r = res.data;
+        if (r.status === "0") {
+          this.modalConfirm = false;
+          this.init();
+        }
+      });
+    }
+  }
 };
 </script>

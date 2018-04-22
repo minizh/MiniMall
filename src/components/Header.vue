@@ -33,8 +33,8 @@
                     <a href="javascript:void(0)" class="navbar-link" v-if="nickName" @click="logout">Logout</a>
                     <div class="navbar-cart-container">
                         <span class="navbar-cart-count"></span>
-                        <a class="navbar-link navbar-cart-link" href="/#/cart">
-                            <svg class="navbar-cart-logo">
+                        <a class="navbar-link navbar-cart-link" href="javascript:;">
+                            <svg class="navbar-cart-logo" @click="cartLogin">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
                             </svg>
                         </a>
@@ -77,9 +77,10 @@
 </template>
 
 <script>
+import "../assets/css/base.css";
 import "../assets/css/login.css";
-// import Modal from "./Modal";
 import axios from "axios";
+import Modal from "./Modal";
 export default {
   data() {
     return {
@@ -133,8 +134,19 @@ export default {
         let r = res.data;
         if (r.status === "0") {
           this.nickName = r.result;
+          this.loginFlag = true;
+        } else {
+          this.loginFlag = false;
         }
       });
+    },
+    // 购物车登录拦截
+    cartLogin() {
+      if (!this.nickName) {
+          this.loginModalFlag = true;
+      }else{
+          this.$router.push('/cart');
+      }
     }
   }
 };
