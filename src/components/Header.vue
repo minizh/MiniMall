@@ -113,6 +113,7 @@ export default {
             this.errorTip = false;
             this.loginModalFlag = false;
             this.nickName = r.result.userName;
+            this.$router.go(0); //刷新页面
           } else {
             this.errorTip = true;
           }
@@ -125,6 +126,7 @@ export default {
         if (r.status === "0") {
           this.nickName = "";
           //   alert(r.msg);
+          this.$router.go(0); //刷新页面
         }
       });
     },

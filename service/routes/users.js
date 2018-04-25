@@ -196,4 +196,28 @@ router.post('/editCheckAll', (req, res, next) => {
   });
 });
 
+// 获取地址列表
+router.get('/addressList', (req, res, next) => {
+  let userId = req.cookies.userId;
+  User.findOne({
+    userId: userId
+  }, (err, data) => {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result
+      });
+    } else {
+      if (data) {
+        res.json({
+          status: '0',
+          msg: '请求成功',
+          result: data.addressList
+        });
+      }
+    }
+  });
+});
+
 module.exports = router;
