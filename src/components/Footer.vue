@@ -12,7 +12,7 @@
                         </select>
                     </div>
                     <div class="footer__secondary__nav">
-                        <span>Copyright © 2017 IMooc All Rights Reserved.</span>
+                        <span>Copyright © 2017 MiNi All Rights Reserved.</span>
                         <a href="http://us.lemall.com/us/aboutUs.html">
                             About Us
                         </a>

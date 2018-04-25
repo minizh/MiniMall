@@ -80,7 +80,9 @@ router.post('/checkLogin', (req, res, next) => {
 // 购物车列表信息
 router.get('/cartList', (req, res, next) => {
   let userId = req.cookies.userId;
-  User.findOne({ userId: userId }, (err, data) => {
+  User.findOne({
+    userId: userId
+  }, (err, data) => {
     if (err) {
       res.json({
         status: '1',
@@ -104,26 +106,94 @@ router.post('/cart/del', (req, res, next) => {
   User.update({
     userId: userId
   }, {
-      $pull: {
-        'cartList': {
-          'productId': productId
-        }
+    $pull: {
+      'cartList': {
+        'productId': productId
       }
-    }, (err, data) => {
-      if(err){
-        res.json({
-          status:'1',
-          msg:err.msg,
-          result:''
+    }
+  }, (err, data) => {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.msg,
+        result: ''
+      });
+    } else {
+      res.json({
+        status: '0',
+        msg: '删除成功！',
+        result: data
+      });
+    }
+  });
+});
+
+// 编辑购物车
+router.post('/cartEdit', (req, res, next) => {
+  let userId = req.cookies.userId;
+  let productId = req.body.productId;
+  let productNum = req.body.productNum;
+  let checked = req.body.checked;
+  User.update({
+    'userId': userId,
+    "cartList.productId": productId
+  }, {
+    'cartList.$.productNum': productNum,
+    'cartList.$.checked': checked
+  }, (err, data) => {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    } else {
+      res.json({
+        status: '0',
+        msg: '修改成功！',
+        result: ''
+      });
+    }
+  });
+});
+
+// 全选
+router.post('/editCheckAll', (req, res, next) => {
+  let userId = req.cookies.userId;
+  let checkAll = req.body.checkAll ? '1' : '0';
+  console.log(checkAll);
+  User.findOne({
+    userId: userId
+  }, (err, userdata) => {
+    if (err) {
+      res.json({
+        status: '1',
+        msg: err.message,
+        result: ''
+      });
+    } else {
+      if (userdata) {
+        userdata.cartList.forEach((item) => {
+          item.checked = checkAll;
         });
-      }else{
-        res.json({
-          status:'0',
-          msg:'删除成功！',
-          result:data
+        userdata.save((err1, data) => {
+          if (err1) {
+            res.json({
+              status: '1',
+              msg: err1.message,
+              result: ''
+            });
+          } else {
+            res.json({
+              status: '0',
+              msg: '操作成功！',
+              result: ''
+            });
+          }
         });
       }
-    });
+    }
+  });
 });
 
 module.exports = router;

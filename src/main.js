@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import vueLazyload from 'vue-lazyload'
 import infiniteScroll from 'vue-infinite-scroll'
+// import { currentId } from 'async_hooks'
+import {
+  currency
+} from './util/currency'
 // import Icon from './assets/svg/svg.svg'
 
 // Vue.component('icon', Icon);
@@ -19,6 +23,9 @@ Vue.use(vueLazyload, {
 
 // 配置下拉加载更多
 Vue.use(infiniteScroll)
+
+// 定义全局过滤器
+Vue.filter('currency', currency);
 
 /* eslint-disable no-new */
 new Vue({

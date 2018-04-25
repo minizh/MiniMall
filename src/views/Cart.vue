@@ -55,7 +55,7 @@
               <li v-for="item in cartList">
                 <div class="cart-tab-1">
                   <div class="cart-item-check">
-                    <a href="javascipt:;" class="checkbox-btn item-check-btn">
+                    <a href="javascipt:;" class="checkbox-btn item-check-btn" v-bind:class="{'checked':item.checked==='1'}" @click="editCart('checked',item)">
                       <svg class="icon icon-ok">
                         <use xlink:href="#icon-ok"></use>
                       </svg>
@@ -69,21 +69,21 @@
                   </div>
                 </div>
                 <div class="cart-tab-2">
-                  <div class="item-price" v-text="item.salePrice"></div>
+                  <div class="item-price">{{item.salePrice | currency('$')}}</div>
                 </div>
                 <div class="cart-tab-3">
                   <div class="item-quantity">
                     <div class="select-self select-self-open">
                       <div class="select-self-area">
-                        <a class="input-sub">-</a>
+                        <a class="input-sub" @click="editCart('minu',item)">-</a>
                         <span class="select-ipt" v-text="item.productNum"></span>
-                        <a class="input-add">+</a>
+                        <a class="input-add" @click="editCart('add',item)">+</a>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="cart-tab-4">
-                  <div class="item-price-total" v-text="item.productNum*item.salePrice"></div>
+                  <div class="item-price-total">{{ (item.productNum*item.salePrice) | currency('$')}}</div>
                 </div>
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
@@ -102,8 +102,8 @@
           <div class="cart-foot-inner">
             <div class="cart-foot-l">
               <div class="item-all-check">
-                <a href="javascipt:;">
-                  <span class="checkbox-btn item-check-btn">
+                <a href="javascipt:;" @click="toggleCheckAll">
+                  <span class="checkbox-btn item-check-btn" v-bind:class="{'checked':checkAllFlag}">
                     <svg class="icon icon-ok">
                       <use xlink:href="#icon-ok" />
                     </svg>
@@ -115,7 +115,7 @@
             <div class="cart-foot-r">
               <div class="item-total">
                 Item total:
-                <span class="total-price">500</span>
+                <span class="total-price">{{totalPrice | currency('$')}}</span>
               </div>
               <div class="btn-wrap">
                 <a class="btn btn--red">Checkout</a>
@@ -143,12 +143,13 @@ import NavFooter from "./../components/Footer";
 import Bread from "./../components/Bread";
 import Modal from "./../components/Modal";
 import axios from "axios";
+// import { currency } from "./../util/currency";
 export default {
   data() {
     return {
-      cartList: [],
-      modalConfirm: false,
-      productId: ""
+      cartList: [], // 购物车列表
+      modalConfirm: false, //删除确认模态框
+      productId: "" //产品Id,用于保存选中删除产品id
     };
   },
   components: {
@@ -159,6 +160,32 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  // filters: {
+  //   currency: currency
+  // },
+  computed: {
+    // 全选状态
+    checkAllFlag() {
+      return this.checkCount === this.cartList.length;
+    },
+    // 选中数量
+    checkCount() {
+      var i = 0;
+      this.cartList.forEach(item => {
+        if (item.checked === "1") i++;
+      });
+      return i;
+    },
+    // 总价
+    totalPrice() {
+      var money = 0;
+      this.cartList.forEach(item => {
+        if (item.checked === "1")
+          money += parseFloat(item.salePrice) * parseInt(item.productNum);
+      });
+      return money;
+    }
   },
   methods: {
     // 初始化获取购物车列表信息
@@ -184,6 +211,39 @@ export default {
         if (r.status === "0") {
           this.modalConfirm = false;
           this.init();
+        }
+      });
+    },
+    // 编辑购物车
+    editCart(flag, item) {
+      if (flag === "minu") {
+        if (item.productNum <= 1) return;
+        item.productNum--;
+      } else if (flag === "add") {
+        item.productNum++;
+      } else if (flag === "checked") {
+        item.checked = item.checked === "1" ? "0" : "1";
+      }
+      axios
+        .post("users/cartEdit", {
+          productId: item.productId,
+          productNum: item.productNum,
+          checked: item.checked
+        })
+        .then(res => {
+          let r = res.data;
+        });
+    },
+    // 全选切换
+    toggleCheckAll() {
+      let flag = !this.checkAllFlag;
+      this.cartList.forEach(item => {
+        item.checked = flag ? "1" : "0";
+      });
+      axios.post("/users/editCheckAll", { checkAll: flag }).then(res => {
+        let r = res.data;
+        if (r.status === "0") {
+          console.log(r.msg);
         }
       });
     }

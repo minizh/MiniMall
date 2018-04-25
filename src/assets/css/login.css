@@ -26,7 +26,18 @@
 }
 
 .navbar-brand-logo {
-  /*width: 120px;*/
+  width: 172px;
+}
+
+@media(max-width:767px) {
+  .navbar-brand-logo {
+    width: 122px;
+  }
+  .navbar {
+    padding-bottom: 0;
+    padding-top: 0;
+    height: 50px;
+  }
 }
 
 .header a,
