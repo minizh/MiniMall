@@ -1,0 +1,10 @@
+04.25
+
+1、Can't set headers after they are sent； 
+出现这个错误就表示。你在一个已经关闭的连接上又做一些写操作。
+无论是res.json()还是 res.send() 
+底层代码都是用res.end()结束。
+也就是说如果你 res.json()后 又有出现了 res.xxxx()的操作
+就会报上面的那个错误
+
+2、vue的计算属性computed是实时监听变量的变化，不可在其他地方进行赋值等修改操作，否则都将在变量值变化后被computed内的操作覆盖修改后的值。
