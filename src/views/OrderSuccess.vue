@@ -1,7 +1,9 @@
 <template>
     <div>
         <nav-header></nav-header>
-        <bread></bread>
+        <bread>
+            <span>/OrderSuccess</span>
+        </bread>
         <div>
             <div class="container">
                 <div class="page-title-normal">
@@ -83,6 +85,8 @@ export default {
           if (r.status === "0") {
             this.orderTotal = r.result.orderTotal;
             this.orderId = r.result.orderId;
+          } else if (r.status === "1001") {
+            this.$store.commit("loginState", true);
           }
         });
     }

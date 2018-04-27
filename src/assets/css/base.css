@@ -2101,6 +2101,10 @@ html {
 
 /** header and footer end **/
 
+#loginModal {
+  z-index: 1000;
+}
+
 .md-modal {
   position: fixed;
   top: 50%;

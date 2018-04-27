@@ -181,6 +181,8 @@ export default {
             this.orderTotal =
               this.itemSubtotal + this.shipping + this.tax - this.discount;
           });
+        } else if (r.status === "1001") {
+          this.$store.commit("loginState", true);
         }
       });
     },
@@ -199,6 +201,8 @@ export default {
             this.$router.push({
               path: "/orderSuccess?orderId=" + r.result.orderId
             });
+          } else if (r.status === "1001") {
+            this.$store.commit("loginState", true);
           }
         });
     }

@@ -195,6 +195,8 @@ export default {
           // 初始化时，默认selectAddrId的值为第一个设置的默认配送地址
           let item0 = this.addressList[0];
           this.selectAddrId = item0.addressId;
+        } else if (r.status === "1001") {
+          this.$store.commit("loginState", true);
         }
       });
     },
@@ -214,6 +216,8 @@ export default {
           this.init();
           this.checkedIndex = 0;
           console.log(r.msg);
+        } else if (r.status === "1001") {
+          this.$store.commit("loginState", true);
         }
       });
     },
@@ -236,6 +240,8 @@ export default {
             this.isMdShow = false;
             this.init();
             console.log(r.msg);
+          } else if (r.status === "1001") {
+            this.$store.commit("loginState", true);
           }
         });
     },

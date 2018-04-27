@@ -88,7 +88,7 @@
                 <div class="cart-tab-5">
                   <div class="cart-item-opration">
                     <a href="javascript:;" class="item-edit-btn">
-                      <svg class="icon icon-del" @click="delCartConfirm(item.productId)">
+                      <svg class="icon icon-del" @click="delCartConfirm(item)">
                         <use xlink:href="#icon-del"></use>
                       </svg>
                     </a>
@@ -149,7 +149,7 @@ export default {
     return {
       cartList: [], // 购物车列表
       modalConfirm: false, //删除确认模态框
-      productId: "" //产品Id,用于保存选中删除产品id
+      delItem: {} // 选中删除产品项
     };
   },
   components: {
@@ -200,19 +200,25 @@ export default {
       this.modalConfirm = false;
     },
     // 点击删除按钮显示确认模态框
-    delCartConfirm(productId) {
+    delCartConfirm(delItem) {
       this.modalConfirm = true;
-      this.productId = productId;
+      this.delItem = delItem;
     },
     // 点击确认删除商品数据
-    delCart(productId) {
-      axios.post("/users/cart/del", { productId: this.productId }).then(res => {
-        let r = res.data;
-        if (r.status === "0") {
-          this.modalConfirm = false;
-          this.init();
-        }
-      });
+    delCart(delItem) {
+      axios
+        .post("/users/cart/del", { productId: this.delItem.productId })
+        .then(res => {
+          let r = res.data;
+          if (r.status === "0") {
+            this.modalConfirm = false;
+            this.init();
+            let num = parseInt(this.delItem.productNum);
+            this.$store.commit("updateCartCount", -num);
+          } else if (r.status === "1001") {
+            this.$store.commit("loginState", true);
+          }
+        });
     },
     // 编辑购物车
     editCart(flag, item) {
@@ -232,6 +238,17 @@ export default {
         })
         .then(res => {
           let r = res.data;
+          if (r.status === "0") {
+            let num = 0;
+            if (flag === "minu") {
+              num = -1;
+            } else if (flag === "add") {
+              num = 1;
+            }
+            this.$store.commit("updateCartCount", num);
+          } else if (r.status === "1001") {
+            this.$store.commit("loginState", true);
+          }
         });
     },
     // 全选切换
@@ -244,6 +261,8 @@ export default {
         let r = res.data;
         if (r.status === "0") {
           console.log(r.msg);
+        } else if (r.status === "1001") {
+          this.$store.commit("loginState", true);
         }
       });
     },

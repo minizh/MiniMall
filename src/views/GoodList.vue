@@ -216,6 +216,7 @@ export default {
         let r = res.data;
         if (r.status === "0") {
           this.mdShowCart = true; //添加成功
+          this.$store.commit("updateCartCount", 1);
         } else {
           this.mdShow = true; //显示未登录模态框
           // alert(res.data.msg);

@@ -3,6 +3,7 @@ let router = express.Router();
 let User = require('../models/user');
 require('./../util/util');
 
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   res.send('respond with a resource');
@@ -24,11 +25,11 @@ router.post('/login', (req, res, next) => {
       if (userInfo) {
         res.cookie('userId', userInfo.userId, {
           path: '/',
-          maxAge: 1000 * 60 * 60 * 2
+          maxAge: 1000 * 5
         });
         res.cookie('userName', userInfo.userName, {
           path: '/',
-          maxAge: 1000 * 60 * 60 * 2
+          maxAge: 1000 * 5
         });
         // req.session.user = userInfo;
         res.json({
@@ -462,7 +463,42 @@ router.get('/orderDetail', (req, res, next) => {
       }
     });
   }
-
 });
+
+// 查询购物车商品数量
+router.get('/getCartCount', (req, res, next) => {
+  if (req.cookies && req.cookies.userId) {
+    let userId = req.cookies.userId;
+    User.findOne({
+      userId: userId
+    }, (err, userInfo) => {
+      if (err) {
+        res.json({
+          status: "1",
+          msg: err.message,
+          result: ''
+        });
+      } else if (userInfo) {
+        let cartList = userInfo.cartList;
+        let cartCount = 0;
+        cartList.map(item => {
+          cartCount += parseInt(item.productNum);
+        });
+        res.json({
+          status: '0',
+          msg: '获取购物车数量成功！',
+          result: cartCount
+        });
+      }
+    });
+  } else {
+    res.json({
+      status: "11000",
+      msg: "当前用户不存在",
+      result: ''
+    });
+  }
+});
+
 
 module.exports = router;
