@@ -21,4 +21,5 @@ let userSchema = new mongoose.Schema({
     "isDefault": Boolean
   }]
 });
+
 module.exports = mongoose.model('User', userSchema, 'users');

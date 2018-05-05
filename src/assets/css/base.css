@@ -702,7 +702,7 @@ a:hover {
     left: 10px;
   }
   .nav-breadcrumb {
-    display: none;
+    /* display: none; */
   }
   .page-title-normal {
     text-align: center;
@@ -2331,18 +2331,23 @@ html {
     display: flex;
     margin-top: 0;
   }
+  .md-modal .btn-wrap > div{
+    width:100%;
+  }
   .md-modal .btn-wrap .btn {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     -ms-flex: 1;
     flex: 1;
-    width: 100%;
-    margin: 0;
+    width: 45%;
+    margin: 5px 5px 17px;
     font-size: 12px;
   }
   .md-modal .btn-wrap .btn:first-child {
-    border-left: none;
-    border-right: none;
+    /* border-left: none; */
+    /* border-right: none; */
+    width: 45%;
+    margin: 5px 5px 17px;
   }
   .md-modal.modal-normal .content-tit {
     font-size: 12px;
