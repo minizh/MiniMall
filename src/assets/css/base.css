@@ -687,6 +687,9 @@ a:hover {
   html {
     font-size: 12.5px;
   }
+  .nav-breadcrumb a:after{
+    top:0;
+  }
   .container {
     padding: 0;
   }
@@ -2288,13 +2291,13 @@ html {
 
 @media only screen and (max-width: 767px) {
   .md-modal {
-    width: 300px !important;
+    width: 85% !important;
   }
   .md-modal.md-modal-fun .md-content {
     padding-top: 30px;
   }
   .md-modal .md-close {
-    display: none;
+    /* display: none; */
   }
   .md-modal .md-tit {
     padding: 0 15px;
